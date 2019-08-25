@@ -1,6 +1,16 @@
 node {
-    stage("hello world"){
-        properties([parameters([string(defaultValue: 'Azat', description: 'Paste your name', name: 'NAME', trim: true)]), pipelineTriggers([cron('* * * * * ')])])
-        git 'https://github.com/apenjiyev/jenkinsPipeline.git'        
-    }
+    stage("Download Terraform"){
+            steps{
+                ws("tmp/"){
+                    script {
+                        def exists = fileExists 'terraform_0.12.7_linux_amd64.zip'
+                        if (exists) {
+                            sh "unzip -o terraform_0.12.7_linux_amd64.zip"
+                        } else {
+                            sh "wget https://releases.hashicorp.com/terraform/0.12.7/terraform_0.12.7_linux_amd64.zip"
+                        }
+                    }
+                }
+            }
+        }
 }
